@@ -221,3 +221,7 @@ AgesHousing <- HousingData %>% drop_na(YearBuilt)
 
 
 
+
+
+
+

@@ -155,5 +155,13 @@ The following code when run will tell us which element is greater or larger than
 ```{r}
 numbers>5
 
+
 ```
+
+#definining a funciton etc ... 
+
 Which of your recent purchases were greater than 10 dollars?
+
+
+
+
