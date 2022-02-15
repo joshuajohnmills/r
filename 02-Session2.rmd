@@ -1,0 +1,223 @@
+---
+title: "MDSS Introduction to R Workshop Part 1"
+subtitle: "Basics of R"
+author: "Joshua Mills"
+length: "50 minutes"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: lumen
+
+---
+
+
+# Data Frames and ggplot2 {#GGplot}
+
+
+If you have not installed the packages from last session then these commands will. 
+```{r eval=FALSE}
+install.packages("dplyr")
+install.packages("readr")
+install.packages("ggplot2")
+install.packages("tidyr")
+```
+
+
+Data frames are a core part of the R language, almost all applications of R use data frames to store and manipulate data. 
+```{r}
+library(readr)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+```
+
+
+
+## Tidy Data
+
+When dealing with data frames in R we typically try and keep the data in a tidy format. There are essentially 3 rules for tidy data. 
+
+1. Each variable forms a column.
+
+2. Each observation forms a row.
+
+3. Each type of observational unit forms a table.
+
+Data in tidy form is a lot easier to analyse.
+
+The packages we are going to be using in the rest of the workshop are from a collection called the tidyverse. 
+(https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html)
+
+## Installing packages
+
+For the next section we are going to be using the readr and dplyr packages. They provide many useful functions and data types that allow us to manipulate and read data. To install a package use the following commands. 
+
+```{r eval=FALSE}
+install.packages("dplyr")
+install.packages("readr")
+```
+
+## Data Frames
+
+In R a lot of the data we store is in Data frames. These are similar to using a single spreadsheet in excel, but R has many fantastic functionalities that we can use to sort, select, summarize and produce graphics, statistical analyses  and machine learning from data frames. 
+We will start by reading in a csv file that contains records of Melbourne's Housing sales. 
+
+We will first load the packages we have just installed. 
+```{r}
+library(readr)
+library(dplyr)
+```
+Read in the data using the function Read_csv. It takes a csv file and converts into a data frame that we can manipulate. 
+```{r}
+HousingData <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+```
+
+In order to view a data frame in Rstudio we can use the View() function. Do not use this function if you are going to work on 
+```{r eval=FALSE}
+View(HousingData)
+```
+
+## The Magrittr pipe
+
+The Magrittr pipe is an operator in R that allows us to do multiple functions in one. It takes the previous variable and puts it into the first argument in the next function. For example
+```{r}
+16 %>% log(2) %>% sum(3,2) %>% sqrt()
+#takes the log of 16 and adds  it to 3 and 2, then takes the square root it is the same as the next line 
+```
+Is exactly the same as 
+
+```{r}
+sqrt(sum(log(16,2),3,2))
+```
+
+but a lot easier to organize.This might seem trivial for integers, but when working with data frames it is very useful. 
+
+
+## Simple Data Manipulation
+
+
+### Filter and arrange 
+
+Filter is a verb in dplyr which lets us filter for rows that satisfy a certain constraint. Filter can allow us to see subsets of the data frame that we are interested.
+
+Arrange sorts the column by the column that is specified in the arguments. Desc() means make it descending
+
+Note that here we first select then use the magrittr pipe to pass it on to arrange. It will automatically execute. 
+
+```{r}
+HousingData %>% filter(Suburb == "Caulfield") %>% arrange(desc(Price))
+```
+Find the highest price in your suburb.
+
+Whats the house with the most bedrooms?
+
+What is the most recent sale date in the dataset?
+
+What is the oldest house in the dataset?
+
+
+The tidyverse is a collection of some of the most popular and useful libraries in R. It contains too many libaries and functionalities to be covered in only a few workshops, so we will be going using few of the more general purpose ones. The three we will use today are readr for reading in data, dplyr for wrangling and reshaping data and ggplot to create graphs and plots. 
+
+## Reading in Data
+ 
+First before we can start visualizing the and extracting any insights we have to read it into R. Use the readr function to read it directly from the web. We can replace the 
+```{r}
+HousingData <- read_csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+```
+ **Viewing our data frame**
+ 
+Use the View() function to view a data frame in another tab in order to look at each element. If you are using a downloaded version of R then you can use the fix() function to directly edit a dataframe. 
+
+# Getting Started with Dplyr
+
+Dplyr is useful for manipulating data frames and wrangling data to get insights and to prepare it for visualisation and machine learning. It contains multiple useful functions. (If you have used SQL some of these functions )
+
+## Select 
+
+
+Select takes specified columns from a data frame. Here we are only looking for columns that are specified. Say for example we want to find what suburbs have the cheapest(or most expensive) houses. We can then select the suburbs and the price of each house that has sold. 
+```{r}
+HousingPrices <- HousingData %>% 
+  select(Suburb,Price,Bedroom2) 
+```
+
+## Filter
+
+Selecting data works columns, to select the same thing on rows we use filter. If we are only interested in houses with one or less bedrooms we can use the function select to 
+```{r}
+HousingBedrooms <- HousingPrices %>% 
+  filter(Bedroom2 <= 2)
+HousingBedrooms %>% head(10) %>%  knitr::kable()
+```
+
+This will return houses that have less than two
+If you want to view your data frame use the View() function
+
+
+*Find all houses that have a recorded date less than 1900 *
+
+## Group by and summarise 
+
+Say we want to find otu what suburb is the most expensive. We can go through each suburb and take the average of the house price.
+We first specify what variable we want to group by, and then we can summarise each group. 
+
+```{r}
+HousingData %>% group_by(Suburb) %>% summarise(mean(Price))
+```
+
+It is arranged in the same way that the data frame was before, but this might not be so useful. There are many many suburbs so it might be silly to look through each row to find the maximums. The arrange function can solve this 
+
+
+```{r}
+HousingData %>% group_by(Suburb) %>% summarise(Price=mean(Price)) %>% arrange(desc(Price))
+```
+
+Use Count=n() To  find the amount of houses sold in each suburb
+```{r}
+HousingData %>% group_by(Suburb) %>% summarise(Price = mean(Price),Count= n()) %>% arrange(desc(Price))
+```
+
+
+## Mutate 
+
+Creates a new column
+Say we want to find the average price per room for each council area counting, say we count a bedroom as 1 room and a bathroom as half a room.
+Mutate creates a new column called price per room which is equal to the price divided by the number of bedrooms plus half the number of bathrooms. 
+
+```{r}
+HousingData %>%
+  mutate(PricePerRoom = Price/(Bedroom2 + 0.5*Bathroom))
+```
+
+
+Putting this together to find the council areas that have the most expensive price per room.
+
+```{r}
+HousingData %>%
+  mutate(PricePerRoom = Price/(Bedroom2 + 0.5*Bathroom)) %>% 
+  group_by(CouncilArea) %>% 
+  summarise(PricePerRoom=median(PricePerRoom),count=n()) %>% 
+  arrange(desc(PricePerRoom))
+```
+
+Find suburbs that have the oldest houses 
+
+##Dealing with Na's
+
+
+drop_na() will drop all columns with na in the value.
+
+
+```{r}
+AgesHousing <- HousingData %>% drop_na(YearBuilt)
+```
+
+
+*create a data frame that only has houses with land area above 50sqm*
+*find the cost per sqm in each suburb*
+
+
+
+
+

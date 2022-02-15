@@ -1,0 +1,159 @@
+---
+title: "MDSS Introduction to R Workshop Part 1"
+subtitle: "Basics of R"
+author: "Joshua Mills"
+length: "50 minutes"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+    theme: lumen
+    
+---
+
+
+```{css, echo = FALSE}
+body {
+  background-color: lightblue;
+}
+
+```
+
+# Why use R?
+
+R is a language designed for statistics and data analysis. It contains many built-in functions and libraries that allow 
+
+
+
+# Setting up R: Pre-workshop
+
+## Local Install
+
+The workshops will be taught using Rstudio
+To install R studio you need to 
+
+https://cran.r-project.org/
+
+https://www.rstudio.com/products/rstudio/download/
+
+
+## Using Rstudio Cloud
+
+Go to https://rstudio.cloud/
+
+For speed we recommend logging in using your Monash Google account.
+
+
+![alt text here](Capture.PNG)
+
+
+
+# R basics
+
+
+## Using R as a calculator
+
+
+R supports a  range of mathematical operators, most application in R will involve some numeric calculation. R can be used kind of like a fancy calculator. It supports a wide range of inbuilt functions that we can use to do basic calculations when required, including square root, exponential, factorial and many more. To get used to the R interface type a few basic calculations into the console. 
+```{r results = "hide"}
+1+2
+```
+After running this with ctrl-enter (cmd-enter on Mac) you should see the console results. 
+```{r echo = FALSE}
+1+2
+```
+
+```{r results = "asis"}
+40*4-10
+```
+
+## Saving variables 
+
+To save a variable we use `<-` to assign a certain number a value. These are then stored until we restart our session of R or clear our variable names We can assign a variable almost any type of data from simple numbers as in these upcoming cases to entire spreadsheet like objects, and complicated functions. 
+
+Here we assign the radius of a circle to a value of 40.
+
+```{r}
+radius <- 40
+radius
+```
+
+
+We can use these saved values in later calculations. 
+In this example we can calculate the area of a circle with the radius from before. 
+Practice saving some variables and using them for calculations. 
+
+```{r}
+circumference <- radius*pi*2
+circumference
+```
+
+
+## Strings
+Strings store a collection of characters such as letters or digits. Strings are declared by using either single or double quotation marks. We often use strings to represent names, places or categories. We can save and use strings in much the same way as we use integers numbers, however some operations such as addition cannot be used on strings. 
+
+```{r}
+myName <- "Josh"
+```
+
+
+## Booleans
+
+Booleans store only true or false values.
+
+```{r}
+isfalse <- FALSE
+```
+
+
+Using some comparisons we can identify if the 
+```{r}
+myHeight <- 178
+#if taller than 120, then attendee can go on the park ride
+canRide <- myHeight > 120
+canRide
+```
+
+
+## Vectors
+
+Vectors are used to save a collection of variables, they can be only used to save data of the same type.
+
+Create a vector using the c() function, this will store all variables in the same place, allowing us to reference them with a single variable in R
+```{r}
+numbers <- c(5,6,2,1,7)
+```
+
+
+In the following block write some code that saves a few numbers, say the value of some items you recently purchased.
+```{r}
+#mypurchaces <- c()
+```
+
+Accessing specific numbers from a vector is called indexing. In R we there are a few types of indexing that we can use. The first is 
+In order to take a number from a vector we must use indexing to obtain the item from the vector that is in that position
+Vectors are indexed with square brackets, starting with one. 
+
+
+
+```{r}
+numbers[1]
+```
+note. In python we start with 0, in R we start with 1
+
+```{r}
+numbers[2:4]
+```
+Write some code that takes the first 5 purchases from your previous saved 
+```{r}
+
+```
+
+
+Logical indexing means we can obtain true or false values for each position in the vector
+The following code when run will tell us which element is greater or larger than 5
+```{r}
+numbers>5
+
+```
+Which of your recent purchases were greater than 10 dollars?

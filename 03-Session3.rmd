@@ -1,0 +1,112 @@
+---
+title: "My Notebook"
+output: html_notebook
+
+---
+# Graphing 
+GGplots create an object that we can then add different geometric objects to.
+
+We will use some very simple data here to illustrate how to use some basic ggplot functions. 
+```{r}
+SimpleHouses <- HousingData %>% 
+  drop_na(BuildingArea,Bedroom2,) %>% 
+  filter(Suburb == "Richmond",Bedroom2 > 0,Landsize > 0)  %>% 
+  select(Type,Bedroom2,Price,BuildingArea) %>% 
+  mutate(Type = as.factor(Type))
+```
+```{r eval = FALSE}
+View(SimpleHouses)
+```
+
+
+##Aesthetics and geoms
+
+Aesthetics tell ggplot what elements of the data to map onto what items in the output. This is like telling the X-axis to be based on one feature, the y based on another and the colour to be based on the third. Here we are plotting 
+```{r}
+myplot <-  ggplot(data = SimpleHouses, aes(x = BuildingArea,y=Price,color=Type))+
+  geom_point()
+myplot
+```
+
+Different types of geoms 
+
+There are many types of plots that can be made with ggplot, far too many to be discussed here. We will instead be talking only bar plots, line plots and scatter plots, providing and example of how to make each.
+
+
+Line plots
+
+They are excellent for time series data
+
+
+
+```{r}
+if(!require(lubridate)){
+  install.packages("lubridate")
+  library(lubridate)
+}
+```
+
+```{r}
+ForGraph1 <- HousingData %>% 
+  group_by(Month = floor_date(as.POSIXct(Date,format="%d/%m/%Y"),"month"),Regionname) %>% 
+  summarise(Price = mean(Price))
+```
+
+
+```{r eval = FALSE}
+View(ForGraph1)
+
+
+```
+```{r}
+ggplot(ForGraph1, aes(x=Month, y=Price,group=Regionname,color=Regionname)) +
+    geom_line()
+```
+
+
+
+```{r}
+ForGraph2 <- HousingData %>% 
+  group_by(Postcode) %>% 
+  summarise(Price = mean(Price),Distance = mean(Distance))
+```
+
+```{r}
+ggplot(ForGraph2,aes(x=Distance,y=Price)) + geom_point() +
+     geom_smooth(method = "lm",se = FALSE)
+
+```
+
+*Are houses further from the city on larger blocks of land?*
+
+
+Code used to make the promotional graphic 
+
+```{r}
+ForGraph <- HousingData %>%
+  group_by(Suburb) %>%
+  summarise(AvePrice = mean(Price),Count = n()) %>%
+  arrange(desc(AvePrice)) %>% 
+  filter(Count > 10) %>% 
+  head(10)
+```
+```{r}
+HousePricePlot <- ggplot(ForGraph,aes(x=reorder(Suburb,desc(AvePrice)),y=AvePrice)) + geom_bar(stat="identity",fill="steelblue") +
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 60, hjust=1),
+        axis.title.x=element_blank(),
+        axis.ticks.x =element_blank(),
+        plot.title = element_text(hjust = 0.5,vjust = 1)) +
+  ylab("Average House Sale Price")+
+  scale_y_continuous(expand = c(0,0),labels=scales::dollar_format())+
+  ggtitle("Most expenisve suburbs in Melbourne") 
+```
+```{r}
+HousePricePlot
+```
+
+Challenge
+
+Continue Investigating the data 
+
+Create a graph that investigates the relationship between the age of the House and the sale value.
