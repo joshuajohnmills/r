@@ -185,11 +185,6 @@ pre code {
 <li><a href="#strings">Strings</a></li>
 <li><a href="#booleans">Booleans</a></li>
 <li><a href="#vectors">Vectors</a></li>
-<li><a href="#tidy-data">Tidy Data</a></li>
-<li><a href="#installing-packages">Installing packages</a></li>
-<li><a href="#data-frames">Data Frames</a></li>
-<li><a href="#the-magrittr-pipe">The Magrittr pipe</a></li>
-<li><a href="#simple-data-manipulation">Simple Data Manipulation</a></li>
 </ul></li>
 </ul>
 </div>
@@ -278,94 +273,8 @@ canRide</code></pre>
 <p>Logical indexing means we can obtain true or false values for each position in the vector The following code when run will tell us which element is greater or larger than 5</p>
 <pre class="r"><code>numbers&gt;5</code></pre>
 <pre><code>## [1] FALSE  TRUE FALSE FALSE  TRUE</code></pre>
+<p>#definining a funciton etc …</p>
 <p>Which of your recent purchases were greater than 10 dollars?</p>
-</div>
-<div id="tidy-data" class="section level2">
-<h2>Tidy Data</h2>
-<p>When dealing with data frames in R we typically try and keep the data in a tidy format. There are essentially 3 rules for tidy data.</p>
-<ol style="list-style-type: decimal">
-<li><p>Each variable forms a column.</p></li>
-<li><p>Each observation forms a row.</p></li>
-<li><p>Each type of observational unit forms a table.</p></li>
-</ol>
-<p>Data in tidy form is a lot easier to analyse.</p>
-<p>The packages we are going to be using in the rest of the workshop are from a collection called the tidyverse. (<a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html" class="uri">https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html</a>)</p>
-</div>
-<div id="installing-packages" class="section level2">
-<h2>Installing packages</h2>
-<p>For the next section we are going to be using the readr and dplyr packages. They provide many useful functions and data types that allow us to manipulate and read data. To install a package use the following commands.</p>
-<pre class="r"><code>install.packages(&quot;dplyr&quot;)
-install.packages(&quot;readr&quot;)</code></pre>
-</div>
-<div id="data-frames" class="section level2">
-<h2>Data Frames</h2>
-<p>In R a lot of the data we store is in Data frames. These are similar to using a single spreadsheet in excel, but R has many fantastic functionalities that we can use to sort, select, summarize and produce graphics, statistical analyses and machine learning from data frames. We will start by reading in a csv file that contains records of Melbourne’s Housing sales.</p>
-<p>We will first load the packages we have just installed.</p>
-<pre class="r"><code>library(readr)
-library(dplyr)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;dplyr&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     filter, lag</code></pre>
-<pre><code>## The following objects are masked from &#39;package:base&#39;:
-## 
-##     intersect, setdiff, setequal, union</code></pre>
-<p>Read in the data using the function Read_csv. It takes a csv file and converts into a data frame that we can manipulate.</p>
-<pre class="r"><code>HousingData &lt;- readr::read_csv(&quot;https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv&quot;)</code></pre>
-<pre><code>## Rows: 13580 Columns: 21</code></pre>
-<pre><code>## -- Column specification --------------------------------------------------------
-## Delimiter: &quot;,&quot;
-## chr  (8): Suburb, Address, Type, Method, SellerG, Date, CouncilArea, Regionname
-## dbl (13): Rooms, Price, Distance, Postcode, Bedroom2, Bathroom, Car, Landsiz...</code></pre>
-<pre><code>## 
-## i Use `spec()` to retrieve the full column specification for this data.
-## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
-<p>In order to view a data frame in Rstudio we can use the View() function. Do not use this function if you are going to work on</p>
-<pre class="r"><code>View(HousingData)</code></pre>
-</div>
-<div id="the-magrittr-pipe" class="section level2">
-<h2>The Magrittr pipe</h2>
-<p>The Magrittr pipe is an operator in R that allows us to do multiple functions in one. It takes the previous variable and puts it into the first argument in the next function. For example</p>
-<pre class="r"><code>16 %&gt;% log(2) %&gt;% sum(3,2) %&gt;% sqrt()</code></pre>
-<pre><code>## [1] 3</code></pre>
-<pre class="r"><code>#takes the log of 16 and adds  it to 3 and 2, then takes the square root it is the same as the next line </code></pre>
-<p>Is exactly the same as</p>
-<pre class="r"><code>sqrt(sum(log(16,2),3,2))</code></pre>
-<pre><code>## [1] 3</code></pre>
-<p>but a lot easier to organize.This might seem trivial for integers, but when working with data frames it is very useful.</p>
-</div>
-<div id="simple-data-manipulation" class="section level2">
-<h2>Simple Data Manipulation</h2>
-<div id="filter-and-arrange" class="section level3">
-<h3>Filter and arrange</h3>
-<p>Filter is a verb in dplyr which lets us filter for rows that satisfy a certain constraint. Filter can allow us to see subsets of the data frame that we are interested.</p>
-<p>Arrange sorts the column by the column that is specified in the arguments. Desc() means make it descending</p>
-<p>Note that here we first select then use the magrittr pipe to pass it on to arrange. It will automatically execute.</p>
-<pre class="r"><code>HousingData %&gt;% filter(Suburb == &quot;Caulfield&quot;) %&gt;% arrange(desc(Price))</code></pre>
-<pre><code>## # A tibble: 12 x 21
-##    Suburb    Address   Rooms Type   Price Method SellerG Date  Distance Postcode
-##    &lt;chr&gt;     &lt;chr&gt;     &lt;dbl&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;   &lt;chr&gt;    &lt;dbl&gt;    &lt;dbl&gt;
-##  1 Caulfield 190 Kamb~     5 h     1.66e6 S      Gary    3/12~      8.9     3162
-##  2 Caulfield 18 Ash Gr     4 t     1.6 e6 SP     Gary    3/12~      8.9     3162
-##  3 Caulfield 3/97 Mur~     3 h     1.09e6 S      Gary    30/0~      8.9     3162
-##  4 Caulfield 22 Maste~     2 h     1.07e6 S      Gary    12/0~      8.7     3162
-##  5 Caulfield 6/5 Free~     2 u     7.22e5 S      Gary    3/09~      8.9     3162
-##  6 Caulfield 2/218 Ka~     2 u     6.5 e5 VB     McGrath 3/06~      8.7     3162
-##  7 Caulfield 103/677 ~     2 u     6.38e5 SP     Gary    19/1~      8.9     3162
-##  8 Caulfield 5/14 Bri~     2 u     5.7 e5 S      hockin~ 27/0~      8.7     3162
-##  9 Caulfield 4/14 Bri~     2 u     5.5 e5 VB     Gary    4/03~      8.9     3162
-## 10 Caulfield 3/1015 G~     2 u     5.35e5 S      Biggin  6/05~      8.9     3162
-## 11 Caulfield 2/19 Ash~     1 u     3.23e5 S      hockin~ 4/03~      8.9     3162
-## 12 Caulfield 30 Pyne ~     4 h     1.31e5 PI     Rodney  25/0~      8.9     3162
-## # ... with 11 more variables: Bedroom2 &lt;dbl&gt;, Bathroom &lt;dbl&gt;, Car &lt;dbl&gt;,
-## #   Landsize &lt;dbl&gt;, BuildingArea &lt;dbl&gt;, YearBuilt &lt;dbl&gt;, CouncilArea &lt;chr&gt;,
-## #   Lattitude &lt;dbl&gt;, Longtitude &lt;dbl&gt;, Regionname &lt;chr&gt;, Propertycount &lt;dbl&gt;</code></pre>
-<p>Find the highest price in your suburb.</p>
-<p>Whats the house with the most bedrooms?</p>
-<p>What is the most recent sale date in the dataset?</p>
-<p>What is the oldest house in the dataset?</p>
-</div>
 </div>
 </div>
 

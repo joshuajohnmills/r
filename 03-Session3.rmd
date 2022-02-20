@@ -4,6 +4,19 @@ output: html_notebook
 
 ---
 # Graphing 
+
+
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library()
+```
+
+GGplot is a library used to create graphics in R. It is one of the most popular static graph libraries, and has libraries that allows animations and interactive graphics to be created from GGplot obejcts. 
+
+GGplot works by layering objects onto 
 GGplots create an object that we can then add different geometric objects to.
 
 We will use some very simple data here to illustrate how to use some basic ggplot functions. 
@@ -14,6 +27,8 @@ SimpleHouses <- HousingData %>%
   select(Type,Bedroom2,Price,BuildingArea) %>% 
   mutate(Type = as.factor(Type))
 ```
+
+
 ```{r eval = FALSE}
 View(SimpleHouses)
 ```
@@ -35,7 +50,7 @@ There are many types of plots that can be made with ggplot, far too many to be d
 
 Line plots
 
-They are excellent for time series data
+They are excellent for time series data. 
 
 
 
@@ -55,9 +70,9 @@ ForGraph1 <- HousingData %>%
 
 ```{r eval = FALSE}
 View(ForGraph1)
-
-
 ```
+
+
 ```{r}
 ggplot(ForGraph1, aes(x=Month, y=Price,group=Regionname,color=Regionname)) +
     geom_line()
@@ -71,11 +86,22 @@ ForGraph2 <- HousingData %>%
   summarise(Price = mean(Price),Distance = mean(Distance))
 ```
 
+
+
 ```{r}
 ggplot(ForGraph2,aes(x=Distance,y=Price)) + geom_point() +
      geom_smooth(method = "lm",se = FALSE)
 
 ```
+
+Boxplots
+
+
+```{r}
+
+```
+
+
 
 *Are houses further from the city on larger blocks of land?*
 
