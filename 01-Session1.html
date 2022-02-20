@@ -9,7 +9,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Joshua Mills" />
 
 
 <title>MDSS Introduction to R Workshop Part 1</title>
@@ -166,7 +165,6 @@ pre code {
 
 <h1 class="title toc-ignore">MDSS Introduction to R Workshop Part 1</h1>
 <h3 class="subtitle">Basics of R</h3>
-<h4 class="author">Joshua Mills</h4>
 
 </div>
 
@@ -185,15 +183,20 @@ pre code {
 <li><a href="#strings">Strings</a></li>
 <li><a href="#booleans">Booleans</a></li>
 <li><a href="#vectors">Vectors</a></li>
+<li><a href="#lists">Lists</a></li>
+<li><a href="#dataframes">Dataframes</a></li>
+<li><a href="#reading-in-data">Reading in Data</a></li>
 </ul></li>
 </ul>
 </div>
 
 <style type="text/css">
 body {
-  background-color: lightblue;
+  background-color: #b6c7cf;
 }
-
+.question{
+  color: red; margin-left:30px;margin-right:30px;padding:3px;padding-left:8px;
+}
 </style>
 <div id="why-use-r" class="section level1">
 <h1>Why use R?</h1>
@@ -239,11 +242,14 @@ radius</code></pre>
 <pre class="r"><code>circumference &lt;- radius*pi*2
 circumference</code></pre>
 <pre><code>## [1] 251.3274</code></pre>
+<p>Using the following measurements write some code that calculates the area of a square</p>
+<pre class="r"><code>r &lt;- 40</code></pre>
 </div>
 <div id="strings" class="section level2">
 <h2>Strings</h2>
 <p>Strings store a collection of characters such as letters or digits. Strings are declared by using either single or double quotation marks. We often use strings to represent names, places or categories. We can save and use strings in much the same way as we use integers numbers, however some operations such as addition cannot be used on strings.</p>
 <pre class="r"><code>myName &lt;- &quot;Josh&quot;</code></pre>
+<p>Define a variable that is your name.</p>
 </div>
 <div id="booleans" class="section level2">
 <h2>Booleans</h2>
@@ -273,8 +279,90 @@ canRide</code></pre>
 <p>Logical indexing means we can obtain true or false values for each position in the vector The following code when run will tell us which element is greater or larger than 5</p>
 <pre class="r"><code>numbers&gt;5</code></pre>
 <pre><code>## [1] FALSE  TRUE FALSE FALSE  TRUE</code></pre>
-<p>#definining a funciton etc …</p>
-<p>Which of your recent purchases were greater than 10 dollars?</p>
+<div id="some-inbuilt-functions-on-vectors" class="section level3">
+<h3>Some inbuilt functions on vectors</h3>
+<p>R has many inbuilt functions that allow us to efficiently compute statistics on vector, and manipulate objects.</p>
+<p>Many of the functions in R will automatically apply to all items in a vector. For example calling the function <code>sqrt(c(4,9,16))</code> will evaluate the square root of all 3 numbers, and return a vector containing them.</p>
+<p>Some examples are</p>
+<pre class="r"><code>mean() #calculates the mean of the items in the vector
+sd() # standard deviation 
+var() # variance
+plot() #plots the items
+sin() #sin (other scientific functions are available)
+
+#
+exp() 
+sum()
+
+#and some statistical tests are also available
+lm()
+binom.test()</code></pre>
+</div>
+</div>
+<div id="lists" class="section level2">
+<h2>Lists</h2>
+<p>Lists are similar to vectors but have a few extra added features. In lists we can store data of different sizes, and different values. We can use lists to to store vectors that have names. In the following we store</p>
+<p>Lists can store any type of variable, including other lists. We can have both named an unnamed lists.</p>
+<pre class="r"><code>#an example of a named list
+house_sale_prices &lt;- list(&quot;brighton&quot;=c(1000000,340000),&quot;clayton&quot;= c(190000,570000,4000000), &quot;frankston&quot;= c(2000000,5000000) )</code></pre>
+<pre class="r"><code># an example of an unnamed list. note we put our previous list in
+random_collection &lt;- list(40,&quot;josh&quot;,list(),house_sale_prices)</code></pre>
+<div id="indexing-lists" class="section level3">
+<h3>Indexing Lists</h3>
+<p>Lists can be “indexed” by their names. They can also be indexed by position. Using a souble bracket returns the item inside the list, while using single bracket returns a list holding the elements that have been indexed.</p>
+<pre class="r"><code>#get the prices of a certain suburb 
+house_sale_prices[[&quot;clayton&quot;]]</code></pre>
+<pre><code>## [1]  190000  570000 4000000</code></pre>
+<div class="question">
+<p>Question</p>
+</div>
+<p>Write some code to find the mean of the house prices of each three suburbs in our toy example</p>
+<p>If you might solve it by doing something like this</p>
+<pre class="r"><code>mean(house_sale_prices[[&quot;clayton&quot;]])</code></pre>
+<pre><code>## [1] 1586667</code></pre>
+<pre class="r"><code>mean(house_sale_prices[[&quot;brighton&quot;]])</code></pre>
+<pre><code>## [1] 670000</code></pre>
+<pre class="r"><code>mean(house_sale_prices[[&quot;frankston&quot;]])</code></pre>
+<pre><code>## [1] 3500000</code></pre>
+<p>or maybe something like this</p>
+<pre class="r"><code>for (suburb in names(house_sale_prices)){
+  print(suburb)
+  print(mean(house_sale_prices[[suburb]]))
+}</code></pre>
+<pre><code>## [1] &quot;brighton&quot;
+## [1] 670000
+## [1] &quot;clayton&quot;
+## [1] 1586667
+## [1] &quot;frankston&quot;
+## [1] 3500000</code></pre>
+<p>However this involves writing a lot of error-prone code that is often slow to execute on large datasets.</p>
+<p>In the next session we will be using dataframes along with functions from the tidyverse package to make these kinds of analysis easier to write, read and faster to run.</p>
+</div>
+</div>
+<div id="dataframes" class="section level2">
+<h2>Dataframes</h2>
+<p>Most data in R is stored in dataframes</p>
+<p>Dataframes store flat representations of data similar to a table or single spreadsheet page.</p>
+<p>To read in data</p>
+<p>Here we read in some data from the internet in the form of a csv</p>
+</div>
+<div id="reading-in-data" class="section level2">
+<h2>Reading in Data</h2>
+<pre class="r"><code>house_prices &lt;- read.csv(&quot;https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv&quot;)</code></pre>
+<p>To View the data</p>
+<pre class="r"><code>View(house_prices)</code></pre>
+<div class="question">
+<p>Question</p>
+</div>
+<p>Find any data online that comes in the form of a csv that you might be interested in analyzing. Download the .csv file and place it in a file, copy the file path. You might find the function <code>getwd()</code> useful. R will automatically look in that directory (the working directory) for files. <code>setwd()</code> will change the working directory to the functions argument, where R looks by default.</p>
+<p>Some good places to look are:</p>
+<ul>
+<li><a href="https://www.kaggle.com/" class="uri">https://www.kaggle.com/</a> for simple and easy to use data</li>
+<li><a href="https://data.gov.au/" class="uri">https://data.gov.au/</a> for data about Australia and the Government</li>
+<li><a href="https://datasetsearch.research.google.com/" class="uri">https://datasetsearch.research.google.com/</a> for spefic dataset searches.</li>
+</ul>
+<p>We will be learning more about data frames next session tomorrow.</p>
+<p>This was created by Joshua Mills and the education committee for MDSS, thank you to the rest of the committee for allowing this workshop to be possible.</p>
 </div>
 </div>
 

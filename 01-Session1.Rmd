@@ -1,8 +1,8 @@
 ---
 title: "MDSS Introduction to R Workshop Part 1"
 subtitle: "Basics of R"
-author: "Joshua Mills"
 length: "50 minutes"
+
 output:
   html_document:
     toc: true
@@ -14,9 +14,11 @@ output:
 
 ```{css, echo = FALSE}
 body {
-  background-color: lightblue;
+  background-color: #b6c7cf;
 }
-
+.question{
+  color: red; margin-left:30px;margin-right:30px;padding:3px;padding-left:8px;
+}
 ```
 
 # Why use R?
@@ -88,6 +90,14 @@ circumference <- radius*pi*2
 circumference
 ```
 
+Using the following measurements write some code that calculates the area of a square 
+
+```{r}
+r <- 40
+
+
+```
+
 
 ## Strings
 Strings store a collection of characters such as letters or digits. Strings are declared by using either single or double quotation marks. We often use strings to represent names, places or categories. We can save and use strings in much the same way as we use integers numbers, however some operations such as addition cannot be used on strings. 
@@ -96,6 +106,12 @@ Strings store a collection of characters such as letters or digits. Strings are 
 myName <- "Josh"
 ```
 
+Define a variable that is your name.
+
+```{r}
+
+
+```
 
 ## Booleans
 
@@ -157,10 +173,162 @@ numbers>5
 
 
 ```
+### Some inbuilt functions on vectors
 
-#definining a funciton etc ... 
+R has many inbuilt functions that allow us to efficiently compute statistics on vector, and manipulate objects. 
 
-Which of your recent purchases were greater than 10 dollars?
+Many of the functions in R will automatically apply to all items in a vector. For example calling the function  `sqrt(c(4,9,16))` will evaluate the square root of all 3 numbers, and return a vector containing them. 
+
+Some examples are 
+
+```{r eval = F}
+mean() #calculates the mean of the items in the vector
+sd() # standard deviation 
+var() # variance
+plot() #plots the items
+sin() #sin (other scientific functions are available)
+
+#
+exp() 
+sum()
+
+#and some statistical tests are also available
+lm()
+binom.test()
+```
+
+## Lists
+
+Lists are similar to vectors but have a few extra added features. In lists we can store data of different sizes, and different values.
+We can use lists to to store vectors that have names. In the following we store 
+
+Lists can store any type of variable, including other lists. We can have both named an unnamed lists.
+
+```{r}
+#an example of a named list
+house_sale_prices <- list("brighton"=c(1000000,340000),"clayton"= c(190000,570000,4000000), "frankston"= c(2000000,5000000) )
+
+
+
+```
+
+```{r}
+# an example of an unnamed list. note we put our previous list in
+random_collection <- list(40,"josh",list(),house_sale_prices)
+
+```
+
+### Indexing Lists
+
+Lists can be "indexed" by their names. They can also be indexed by position. Using a souble bracket returns the item inside the list, while using single bracket returns a list holding the elements that have been indexed. 
+```{r}
+#get the prices of a certain suburb 
+house_sale_prices[["clayton"]]
+
+```
+
+<div class="question" >
+  <b>Question
+</div>
+
+
+
+Write some code to find the mean of the house prices of each three suburbs in our toy example
+```{r}
+
+```
+
+
+If you might solve it by doing something like this
+
+
+```{r}
+mean(house_sale_prices[["clayton"]])
+mean(house_sale_prices[["brighton"]])
+mean(house_sale_prices[["frankston"]])
+```
+
+or maybe something like this
+
+```{r}
+for (suburb in names(house_sale_prices)){
+  print(suburb)
+  print(mean(house_sale_prices[[suburb]]))
+}
+```
+However this involves writing a lot of error-prone code that is often slow to execute on large datasets.
+
+In the next session we will be using dataframes along with functions from the tidyverse package to make these kinds of analysis easier to write, read and faster to run. 
+
+## Dataframes
+
+Most data in R is stored in dataframes
+
+Dataframes store flat representations of data similar to a table or single spreadsheet page. 
+
+
+
+## Reading in Data
+Here we read in some data from the internet in the form of a csv 
+This data is then stored in a dataframe within R where we can perform calculations on it
+
+
+```{r}
+
+house_prices <- read.csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+
+```
+
+First we view the data
+
+```{r eval = F}
+
+View(house_prices)
+
+```
+
+We can access single columns as vectors by using the dollar sign operators
+Here we find the mean of all the houses prices in the data set.
+
+```{r}
+mean(house_prices$Price)
+```
+
+
+<div class="question" >
+  <b>Question
+</div>
+
+Find any data online that comes in the form of a csv that you might be interested in analyzing.
+Download the .csv file and place it in a file, copy the file path.
+You might find the function `getwd()` useful. R will automatically look in that directory (the working directory) for files.
+`setwd()` will change the working directory to the functions argument, where R looks by default. 
+
+Some good places to look are:
+
+ - https://www.kaggle.com/ for simple and easy to use data
+ - https://data.gov.au/ for data about Australia and the Government 
+ - https://datasetsearch.research.google.com/ for spefic dataset searches. 
+ 
+
+
+```{r}
+
+```
+
+
+We will be learning more about data frames next session tomorrow, we will be able to answer the following questions.
+
+Is the price of houses increasing each year.
+What are the most expensive suburbs.
+Which region is the most expensive.
+How can we find specific houses that match certain criteria (ie find all three bedroom houses in Clayton.)
+
+
+This was created by Joshua Mills and the education committee for MDSS, thank you to the rest of the committee for allowing this workshop to be possible.  
+
+
+
 
 
 
