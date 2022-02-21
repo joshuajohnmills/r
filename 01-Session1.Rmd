@@ -8,8 +8,11 @@ output:
     toc: true
     toc_depth: 2
     theme: lumen
+    code_folding: show
     includes:
       in_header: header.html
+      
+    
 ---
 
 
@@ -67,9 +70,25 @@ After running this with ctrl-enter (cmd-enter on Mac) you should see the console
 1+2
 ```
 
-```{r results = "asis"}
+```{r }
 40*4-10
 ```
+
+Try to attempt a this simple calculation on your own:
+$$
+\left(\log(2) + \frac{1}{9} \right) * 8
+$$
+```{r}
+
+```
+
+For a full dive into how R can understand mathematical operations, functions and constants, evaluate the expression below in R:
+
+$$
+\frac{1}{2} \sqrt{1 + \cos\left({\frac{\pi}{2}}\right)} * \log(10)
+$$
+
+
 
 ## Saving variables 
 
@@ -182,9 +201,13 @@ Logical indexing means we can obtain true or false values for each position in t
 The following code when run will tell us which element is greater or larger than 5
 ```{r}
 numbers>5
-
-
 ```
+
+If we require a vector ranging from some start and end number, we can use the seq() function.
+```{r}
+vec_zero_to_five <- seq(0,5) # int[1:6] 0 1 2 3 4 5
+```
+
 ### Some inbuilt functions on vectors
 
 R has many inbuilt functions that allow us to efficiently compute statistics on vector, and manipulate objects. 
@@ -218,9 +241,9 @@ Lists can store any type of variable, including other lists. We can have both na
 
 ```{r}
 #an example of a named list
-house_sale_prices <- list("brighton"=c(1000000,340000),"clayton"= c(190000,570000,4000000), "frankston"= c(2000000,5000000) )
-
-
+house_sale_prices <- list("brighton"=c(1000000,340000),
+                          "clayton"= c(190000,570000,4000000),
+                          "frankston"= c(2000000,5000000))
 
 ```
 
@@ -232,7 +255,7 @@ random_collection <- list(40,"josh",list(),house_sale_prices)
 
 ### Indexing Lists
 
-Lists can be "indexed" by their names. They can also be indexed by position. Using a souble bracket returns the item inside the list, while using single bracket returns a list holding the elements that have been indexed. 
+Lists can be "indexed" by their names. They can also be indexed by position. Using a double bracket returns the item inside the list, while using single bracket returns a list holding the elements that have been indexed. 
 ```{r}
 #get the prices of a certain suburb 
 house_sale_prices[["clayton"]]
@@ -257,7 +280,7 @@ Write some code to find the mean of the house prices of each three suburbs in ou
 You might solve it by doing something like this
 
 
-```{r}
+```{r class.source = 'fold-hide'}
 mean(house_sale_prices[["clayton"]])
 mean(house_sale_prices[["brighton"]])
 mean(house_sale_prices[["frankston"]])
@@ -265,7 +288,7 @@ mean(house_sale_prices[["frankston"]])
 
 or maybe something like this if you have written some code before.
 
-```{r}
+```{r class.source = 'fold-hide'}
 for (suburb in names(house_sale_prices)){
   print(suburb)
   print(mean(house_sale_prices[[suburb]]))
@@ -302,12 +325,57 @@ View(house_prices)
 
 ```
 
+
+
+Although RStudio provides indication for the number of rows and columns, these values can be retrived by the `ncol` and `nrow` functions.
+
+```{r}
+ncol(house_prices)
+nrow(house_prices)
+```
+
+For further data exploration, we can view all our columns / variables through `names` or str` command
+
+```{r}
+names(house_prices)
+```
+
+
 We can access single columns as vectors by using the dollar sign operators
 Here we find the mean of all the houses prices in the data set.
 
 ```{r}
 mean(house_prices$Price)
 ```
+
+When accessing data for a single variable, there are mutliple ways of going about this:
+
+```{r eval= F}
+house_prices$Price
+house_prices[, "Price"] # Indexing methods
+house_prices[, 5] # Column #5 is the one attributed to Price
+```
+
+<div class="question" >
+  <b>Question. Display a dataframe with only `Suburb`, `Price` and `Postcode` as columns.</b> 
+  <br>
+  Hint: Use a combination of `c()` to concatenate variable names and the dataframe indexing method shown above
+</div>
+<b> Example output </b>
+
+
+```{r class.source = 'fold-hide'}
+head(house_prices[, c("Suburb", "Price", "Postcode")])
+```
+
+We can also combine row and column referencing. To find the 1st and 100th row of a DataFrame with columns `Suburb`, `Price` and `Postcode`, we can achieve this via:
+
+```{r }
+house_prices[c(1,100), c("Suburb", "Price", "Postcode")]
+```
+
+
+
 
 
 <div class="question" >
@@ -325,7 +393,6 @@ Some good places to look are:
  - https://data.gov.au/ for data about Australia and the Government 
  - https://datasetsearch.research.google.com/ for spefic dataset searches. 
  
-
 
 ```{r}
 
