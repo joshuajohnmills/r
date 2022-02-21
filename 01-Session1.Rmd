@@ -8,7 +8,8 @@ output:
     toc: true
     toc_depth: 2
     theme: lumen
-    
+    includes:
+      in_header: header.html
 ---
 
 
@@ -23,7 +24,8 @@ body {
 
 # Why use R?
 
-R is a language designed for statistics and data analysis. It contains many built-in functions and libraries that allow 
+R is a language designed for statistics and data analysis. It contains many built-in functions and libraries that allow us to analyse data effectively.
+Additional libraries are easy to create and allow domain specific code to be share, or for users to enhance the functionality of base R. 
 
 
 
@@ -83,18 +85,22 @@ radius
 
 We can use these saved values in later calculations. 
 In this example we can calculate the area of a circle with the radius from before. 
-Practice saving some variables and using them for calculations. 
+Can you create some variables in your R console? 
 
 ```{r}
 circumference <- radius*pi*2
 circumference
 ```
+<div class="question" >
+  <b>Question  </b>
+</div>
 
-Using the following measurements write some code that calculates the area of a square 
+Using the following measurements write some code that calculates the area of a rectangle 
+
 
 ```{r}
-r <- 40
-
+length <- 40
+height <- 60
 
 ```
 
@@ -122,7 +128,8 @@ isfalse <- FALSE
 ```
 
 
-Using some comparisons we can identify if the 
+Using comparison operators we can test certain conditions. Many functions will also return a boolean if the input matches the expected output. 
+Here we have some examples of greater than and less than operators.
 ```{r}
 myHeight <- 178
 #if taller than 120, then attendee can go on the park ride
@@ -140,10 +147,12 @@ Create a vector using the c() function, this will store all variables in the sam
 numbers <- c(5,6,2,1,7)
 ```
 
-
-In the following block write some code that saves a few numbers, say the value of some items you recently purchased.
+<div class="question" >
+  <b>Question  </b>
+</div>
+Write some code that saves a few numbers, say the value of some items you recently purchased.
 ```{r}
-#mypurchaces <- c()
+mypurchaces <- c()
 ```
 
 Accessing specific numbers from a vector is called indexing. In R we there are a few types of indexing that we can use. The first is 
@@ -160,7 +169,10 @@ note. In python we start with 0, in R we start with 1
 ```{r}
 numbers[2:4]
 ```
-Write some code that takes the first 5 purchases from your previous saved 
+<div class="question" >
+  <b>Question  </b>
+</div>
+Write some code that takes the first 5 purchases from your previous saved.
 ```{r}
 
 ```
@@ -193,8 +205,8 @@ exp()
 sum()
 
 #and some statistical tests are also available
-lm()
-binom.test()
+fisher.test() #Fisher exact test
+binom.test() # binomial significance test
 ```
 
 ## Lists
@@ -228,7 +240,8 @@ house_sale_prices[["clayton"]]
 ```
 
 <div class="question" >
-  <b>Question
+  <b>Question </b>
+  
 </div>
 
 
@@ -238,8 +251,10 @@ Write some code to find the mean of the house prices of each three suburbs in ou
 
 ```
 
+<br><br><br><br>
 
-If you might solve it by doing something like this
+#### Spoiler
+You might solve it by doing something like this
 
 
 ```{r}
@@ -248,7 +263,7 @@ mean(house_sale_prices[["brighton"]])
 mean(house_sale_prices[["frankston"]])
 ```
 
-or maybe something like this
+or maybe something like this if you have written some code before.
 
 ```{r}
 for (suburb in names(house_sale_prices)){
@@ -268,7 +283,7 @@ Dataframes store flat representations of data similar to a table or single sprea
 
 
 
-## Reading in Data
+### Reading in Data
 Here we read in some data from the internet in the form of a csv 
 This data is then stored in a dataframe within R where we can perform calculations on it
 
@@ -296,7 +311,7 @@ mean(house_prices$Price)
 
 
 <div class="question" >
-  <b>Question
+  <b>Question </b>
 </div>
 
 Find any data online that comes in the form of a csv that you might be interested in analyzing.
@@ -317,6 +332,14 @@ Some good places to look are:
 ```
 
 
+
+
+
+<br>
+<br>
+
+### Next session
+
 We will be learning more about data frames next session tomorrow, we will be able to answer the following questions.
 
 Is the price of houses increasing each year.
@@ -329,6 +352,12 @@ This was created by Joshua Mills and the education committee for MDSS, thank you
 
 
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 
 
