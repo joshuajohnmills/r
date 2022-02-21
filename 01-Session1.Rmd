@@ -79,7 +79,7 @@ $$
 \left(\log(2) + \frac{1}{9} \right) * 8
 $$
 ```{r}
-
+sqrt(sin(log(2)+1/9))
 ```
 
 For a full dive into how R can understand mathematical operations, functions and constants, evaluate the expression below in R:
@@ -384,6 +384,7 @@ house_prices[c(1,100), c("Suburb", "Price", "Postcode")]
 
 Find any data online that comes in the form of a csv that you might be interested in analyzing.
 Download the .csv file and place it in a file, copy the file path.
+Then use the `read.csv` function to read in the csv into R. Use the `View` function to view your data.  
 You might find the function `getwd()` useful. R will automatically look in that directory (the working directory) for files.
 `setwd()` will change the working directory to the functions argument, where R looks by default. 
 
@@ -391,7 +392,7 @@ Some good places to look are:
 
  - https://www.kaggle.com/ for simple and easy to use data
  - https://data.gov.au/ for data about Australia and the Government 
- - https://datasetsearch.research.google.com/ for spefic dataset searches. 
+ - https://datasetsearch.research.google.com/ for specific dataset searches. 
  
 
 ```{r}

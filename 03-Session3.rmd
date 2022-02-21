@@ -131,6 +131,46 @@ HousePricePlot <- ggplot(ForGraph,aes(x=reorder(Suburb,desc(AvePrice)),y=AvePric
 HousePricePlot
 ```
 
+
+```{r}
+download.file("https://data.gov.au/data/dataset/af33dd8c-0534-4e18-9245-fc64440f742e/resource/3b946968-319e-4125-8971-2a33d5bf000c/download/vic_loc_polygon_shp.zip" , destfile="DATA/suburb_shape_file.zip")
+unzip("DATA/suburb_shape_file.zip",exdir = "/DATA/suburb_shape_file")
+
+```
+
+
+```{r}
+library(sf)
+my_spdf <- readOGR( 
+  dsn= paste0(getwd(),"/DATA/suburb_shape_file/VIC_LOC_POLYGON_shp") , 
+  layer="vic_localities",
+  verbose=FALSE
+)
+sf_df <- st_read("/DATA/suburb_shape_file/VIC_LOC_POLYGON_shp/vic_localities.shp")
+
+average_price <- house_prices %>% filter(Longtitude<146,Longtitude>144, ) %>% group_by(Suburb) %>% summarise(mean_price =mean(Price))
+
+data_final<- left_join(sf_df,average_price, by =c( "LOC_NAME" ="Suburb"))
+
+plt <- ggplot()+
+  geom_sf(data = data_final,aes(geometry=geometry,fill=mean_price),col="black")+xlim(c(144.65,145.35))+
+ylim(c(-38.2,-37.4))+
+theme_void()+
+theme(panel.background = element_rect("lightblue"))+
+scale_fill_gradient(
+  low = "yellow",
+  high = "red",
+  space = "Lab",
+  na.value = "grey50",
+  guide = "colourbar",
+  aesthetics = "fill"
+)
+plt
+ggsave("map.pdf",plt)
+```
+
+
+
 Challenge
 
 Continue Investigating the data 

@@ -1,16 +1,36 @@
 ---
 title: "MDSS Introduction to R Workshop Part 2"
 subtitle: "Basics of R"
-author: "Joshua Mills"
 length: "50 minutes"
 output:
   html_document:
     toc: true
     toc_depth: 2
-    number_sections: true
     theme: lumen
+    code_folding: show
+    includes:
+      in_header: header.html
+      
 
 ---
+
+
+```{css, echo = FALSE}
+body {
+  background-color: #b6c7cf;
+}
+.table{
+  border-radius: 3px;
+  background: #f5f5f5;
+  padding: 25px;
+}
+.odd{
+  background: #ffffff;
+}
+.question{
+  color: red; margin-left:30px;margin-right:30px;padding:3px;padding-left:8px;
+}
+```
 
 
 # Data Frames - Loading and manipulating data
@@ -57,29 +77,33 @@ The packages we are going to be using in the rest of the workshop are from a col
 
 ## Data Frames
 
-In R a lot of the data we store is in Data frames. These are similar to using a single spreadsheet in excel, but R has many fantastic functionalities that we can use to sort, select, summarize and produce graphics, statistical analyses  and machine learning from data frames. 
+
 We will start by reading in a csv file that contains records of Melbourne's Housing sales. 
 
-Before we can start manipulating/analyzing data and extracting any insights, we have to read it into R. We may use the function `read_csv` from *readr* to read data directly from the web. It takes a CSV file and converts into a data frame that we can manipulate.
+Before we can start manipulating/analyzing data and extracting any insights, we have to read it into R. We may use the function `read_csv` from *readr* to read data directly from the web. It takes a CSV file and converts into a data frame that we can manipulate. This function is faster than the default `read.csv` and returns a tibble, which is very similar to a data frame, but prints more nicely, only evaluates things when they're needed(lazy) and throws more errors in some places a default data frame would silently return the wrong result. 
+
+### Review from session one
 
 ```{r}
-HousingData <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+housing_data <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
 ```
 
 **Viewing the dataframe**
+<br>
 In order to view a data frame in Rstudio we can use the View() function. Do not use this function if you are going to work in a different IDE. If using a downloaded version of R, you can use the `fix()` function to directly edit a dataframe. 
 
 ```{r eval=FALSE}
-View(HousingData)
+View(housing_data)
 ```
 
-## The Magrittr pipe
+## The Magrittr Pipe
 
-The Magrittr pipe is an operator in R that allows us to do multiple functions in one. It takes the previous variable and puts it into the first argument in the next function. For example
+![](MagrittePipe.jpg)
+
+The Magrittr pipe is an operator in R that allows us to do multiple functions in one. It takes the previous variable and puts it into the **first argument** in the next function. For example
 
 ```{r}
 16 %>% log(2) %>% sum(3,2) %>% sqrt()
-#takes the log of 16 and adds  it to 3 and 2, then takes the square root it is the same as the next line 
 ```
 
 is exactly the same as 
@@ -91,10 +115,42 @@ sqrt(sum(log(16,2),3,2))
 but a lot easier to organize.This might seem trivial for integers, but when working with data frames it is very useful. 
 
 
+<div class="question" >
+  <b> Question  </b>
+</div>
+
+Rewrite the following expression without using nested brackets. Instead only use the magrittr pipe
+```{r}
+```
+
+
+```{r }
+x <- 2
+
+sqrt(sin(log(x)))
+
+
+mean(sqrt(seq((sum(x,5,6)))))
+
+```
+<br>
+<br><br>
+
+```{r class.source = 'fold-hide'}
+x <- 2
+x %>% log() %>% sin() %>% sqrt()
+
+x %>% sum(5,6) %>% seq() %>% sqrt() %>% mean()
+
+
+```
+
+
+
 ## Simple Data Manipulation
 
 
-### Filter and arrange 
+### Filter and Arrange 
 
 `filter` is a verb in *dplyr* which lets us filter for rows that satisfy a certain constraint. it allows us to see subsets of the data frame that we are interested in.
 
@@ -105,7 +161,13 @@ but a lot easier to organize.This might seem trivial for integers, but when work
 Note that here we first select then use the *magrittr pipe* to pass it on to `arrange`. It will automatically execute. 
 
 ```{r}
-HousingData %>% filter(Suburb == "Caulfield") %>% arrange(desc(Price))
+housing_data %>% filter(Suburb == "Caulfield") %>% arrange(desc(Price))
+
+
+#note this is the same as 
+arrange(filter(housing_data,Suburb == "Caulfield"),desc(Price))
+
+#but the former gives much more readable code
 ```
 
 
@@ -130,7 +192,7 @@ The tidyverse is a collection of some of the most popular and useful libraries i
 Select takes specified columns from a data frame. Here we are only looking for columns that are specified. Say for example we want to find out what suburbs have the cheapest (or most expensive) houses. We can then select the suburbs and the price of each house that has sold. 
 
 ```{r}
-HousingPrices <- HousingData %>% 
+housing_prices <- housing_data %>% 
   select(Suburb,Price,Bedroom2) 
 ```
 
@@ -139,9 +201,11 @@ HousingPrices <- HousingData %>%
 Just like `select` chooses columns from dataframe, `filter` can be used to choose rows. If we are only interested in houses with two or less bedrooms we can use `filter` to specify the criteria for choosing only the rows where bedrooms are less than or equal to two (bedroom <= 2).
 
 ```{r}
-HousingBedrooms <- HousingPrices %>% 
+housing_bedrooms <- housing_prices %>% 
   filter(Bedroom2 <= 2)
-#HousingBedrooms %>% head(10) %>%  knitr::kable()
+
+
+housing_bedrooms %>% head(10) %>%  knitr::kable()
 ```
 
 This will return houses that have less than three bedrooms and store that in `HousingBedrooms` dataframe. To view the resultant dataframe, `View()` function can be used.
@@ -157,19 +221,19 @@ Say we want to find out what suburb is the most expensive. We can go over the da
 To achieve this here, we first specify what variable we want to group by, and then we can summarise each group to get the average Price.
 
 ```{r}
-HousingData %>% group_by(Suburb) %>% summarise(mean(Price))
+housing_data %>% group_by(Suburb) %>% summarise(mean(Price))
 ```
 
 The order of dataframe is preserved by this command, but this may not be very useful. There are many many suburbs so it might be silly to look through each row to find the maximums. The `arrange` function can solve this:
 
 ```{r}
-HousingData %>% group_by(Suburb) %>% summarise(Price=mean(Price)) %>% arrange(desc(Price))
+housing_data %>% group_by(Suburb) %>% summarise(Price=mean(Price)) %>% arrange(desc(Price))
 ```
 
 Use `Count=n()` to find the amount of houses sold in each suburb:
 
 ```{r}
-HousingData %>% group_by(Suburb) %>% summarise(Price = mean(Price),Count= n()) %>% arrange(desc(Price))
+housing_data %>% group_by(Suburb) %>% summarise(Price = mean(Price),Count= n()) %>% arrange(desc(Price))
 ```
 
 ## Mutate 
@@ -179,14 +243,14 @@ Say we want to find the average price per room for each council area counting, s
 `mutate` will add a new column called `PricePerRoom` which is equal to the price divided by the number of bedrooms plus half the number of bathrooms. 
 
 ```{r}
-HousingData %>%
+housing_data %>%
   mutate(PricePerRoom = Price/(Bedroom2 + 0.5*Bathroom))
 ```
 
 Putting this together to find the council areas that have the most expensive price per room.
 
 ```{r}
-HousingData %>%
+housing_data %>%
   mutate(PricePerRoom = Price/(Bedroom2 + 0.5*Bathroom)) %>% 
   group_by(CouncilArea) %>% 
   summarise(PricePerRoom=median(PricePerRoom),count=n()) %>% 
@@ -197,12 +261,12 @@ HousingData %>%
 
 1. Find suburbs that have the oldest house(s).
 
-##Dealing with Na's (Missing Values)
+## Dealing with Na's (Missing Values)
 
 `drop_na()` will drop all columns with na in the value.
 
 ```{r}
-AgesHousing <- HousingData %>% drop_na(YearBuilt)
+ages_housing <- housing_data %>% drop_na(YearBuilt)
 ```
 
 
