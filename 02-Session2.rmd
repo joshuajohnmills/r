@@ -50,7 +50,7 @@ install.packages("tidyr")
 
 We will first load the packages we have just installed.
 
-```{r}
+```{r results='hide'}
 library(readr)
 library(dplyr)
 library(ggplot2)
@@ -92,7 +92,7 @@ housing_data <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmil
 <br>
 In order to view a data frame in Rstudio we can use the View() function. Do not use this function if you are going to work in a different IDE. If using a downloaded version of R, you can use the `fix()` function to directly edit a dataframe. 
 
-```{r eval=FALSE}
+```{r eval=FALSE,  results = 'hide'}
 View(housing_data)
 ```
 
@@ -103,13 +103,13 @@ View(housing_data)
 The Magrittr pipe is an operator in R that allows us to do multiple functions in one. It takes the previous variable and puts it into the **first argument** in the next function. For example
 
 ```{r}
-16 %>% log(2) %>% sum(3,2) %>% sqrt()
+16 %>% sum(3,2) %>% sqrt() %>% log(base = 2)
 ```
 
 is exactly the same as 
 
 ```{r}
-sqrt(sum(log(16,2),3,2))
+log(sqrt(sum(16,3,2)),base= 2)
 ```
 
 but a lot easier to organize.This might seem trivial for integers, but when working with data frames it is very useful. 
@@ -120,8 +120,7 @@ but a lot easier to organize.This might seem trivial for integers, but when work
 </div>
 
 Rewrite the following expression without using nested brackets. Instead only use the magrittr pipe
-```{r}
-```
+
 
 
 ```{r }
@@ -135,8 +134,8 @@ mean(sqrt(seq((sum(x,5,6)))))
 ```
 <br>
 <br><br>
-
-```{r class.source = 'fold-hide'}
+**Spoiler**
+```{r class.source = 'fold-hide', results = 'hide'}
 x <- 2
 x %>% log() %>% sin() %>% sqrt()
 
@@ -144,7 +143,9 @@ x %>% sum(5,6) %>% seq() %>% sqrt() %>% mean()
 
 
 ```
+# Getting Started with *dplyr*
 
+*dplyr* is useful for manipulating data frames and wrangling data to get insights and to prepare it for visualisation and machine learning. It contains multiple useful functions. (Some of these functions are the same as SQL query keywords)
 
 
 ## Simple Data Manipulation
@@ -171,7 +172,10 @@ arrange(filter(housing_data,Suburb == "Caulfield"),desc(Price))
 ```
 
 
-**Questions**
+
+<div class="question" >
+  <b> Question  </b>
+</div>
 
 1. Find the highest price in your suburb.
 
@@ -181,13 +185,13 @@ arrange(filter(housing_data,Suburb == "Caulfield"),desc(Price))
 
 4. Which one is the oldest house in the dataset?
 
-The tidyverse is a collection of some of the most popular and useful libraries in R. It contains too many libaries and functionalities to be covered in only a few workshops, so we will be looking at a few of the more general purpose ones. For this session, we will use *readr* for reading in data and *dplyr* for wrangling and reshaping data and in session 3, *ggplot* to create graphs and plots. 
+```{r}
+housing_data %>% arrange(YearBuilt)
+```
 
-# Getting Started with *dplyr*
 
-*dplyr* is useful for manipulating data frames and wrangling data to get insights and to prepare it for visualisation and machine learning. It contains multiple useful functions. (Some of these functions are the same as SQL query keywords)
 
-## Select 
+### Select 
 
 Select takes specified columns from a data frame. Here we are only looking for columns that are specified. Say for example we want to find out what suburbs have the cheapest (or most expensive) houses. We can then select the suburbs and the price of each house that has sold. 
 
@@ -196,7 +200,7 @@ housing_prices <- housing_data %>%
   select(Suburb,Price,Bedroom2) 
 ```
 
-## Filter
+### Filter
 
 Just like `select` chooses columns from dataframe, `filter` can be used to choose rows. If we are only interested in houses with two or less bedrooms we can use `filter` to specify the criteria for choosing only the rows where bedrooms are less than or equal to two (bedroom <= 2).
 
@@ -210,11 +214,13 @@ housing_bedrooms %>% head(10) %>%  knitr::kable()
 
 This will return houses that have less than three bedrooms and store that in `HousingBedrooms` dataframe. To view the resultant dataframe, `View()` function can be used.
 
-**Question**
+<div class="question" >
+  <b> Question  </b>
+</div>
 
-1. Find all houses that were recorded before 1900 (Date is before 1900).
+1. Find all houses that were built before 1900 (Date is before 1900).
 
-## Group by and summarise 
+### Group by and summarise 
 
 Say we want to find out what suburb is the most expensive. We can go over the data for each suburb (group) and calculate average house price per suburb. 
 
@@ -236,7 +242,18 @@ Use `Count=n()` to find the amount of houses sold in each suburb:
 housing_data %>% group_by(Suburb) %>% summarise(Price = mean(Price),Count= n()) %>% arrange(desc(Price))
 ```
 
-## Mutate 
+<div class="question" >
+  <b> Question  </b>
+</div>
+
+Find the number of houses in each region. (record NA in a separate col)
+
+Find the seller(agent) with the most houses sold
+
+
+
+
+### Mutate 
 
 `mutate` function creates a new column.
 Say we want to find the average price per room for each council area counting, say we count a bedroom as 1 room and a bathroom as half a room.
@@ -257,11 +274,25 @@ housing_data %>%
   arrange(desc(PricePerRoom))
 ```
 
-**Question:**
 
-1. Find suburbs that have the oldest house(s).
 
-## Dealing with Na's (Missing Values)
+
+<div class="question" >
+  <b> Question  </b>
+</div>
+
+
+1. Find the number of houses that are built in each decade (record NA in a separate col)
+```{r}
+#hint, use the modulo %% operator and mutate before using group by summarise or count
+#(1998 - 1998 %% 10) returns 1990 
+
+
+```
+
+2. Find suburbs that have the oldest house(s).
+
+### Dealing with Na's (Missing Values)
 
 `drop_na()` will drop all columns with na in the value.
 
@@ -270,7 +301,9 @@ ages_housing <- housing_data %>% drop_na(YearBuilt)
 ```
 
 
-**Questions:**
+<div class="question" >
+  <b> Question  </b>
+</div>
 
 1. Create a data frame that only has houses with land area above 50sqm.
 
@@ -278,7 +311,12 @@ ages_housing <- housing_data %>% drop_na(YearBuilt)
 
 
 
+### Next Lesson
 
+
+Will be dedicatedd to plotting in ggplot
+
+Here are some plots created by ggplot. 
 
 
 
