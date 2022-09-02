@@ -85,7 +85,7 @@ Before we can start manipulating/analyzing data and extracting any insights, we 
 ### Review from session one
 
 ```{r}
-housing_data <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+housing_data <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/r/master/MelbourneHousingData.csv")
 ```
 
 **Viewing the dataframe**

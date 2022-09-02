@@ -313,7 +313,7 @@ This data is then stored in a dataframe within R where we can perform calculatio
 
 ```{r}
 
-house_prices <- read.csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+house_prices <- read.csv("https://raw.githubusercontent.com/joshuajohnmills/r/master/MelbourneHousingData.csv")
 
 ```
 

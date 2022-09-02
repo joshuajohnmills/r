@@ -65,7 +65,7 @@ library(tidyverse)
 
 ```{r, results= 'hide',message=FALSE}
 #use the same functions as yesterday
-housing_data <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/Rworkshop/master/MelbourneHousingData.csv")
+housing_data <- readr::read_csv("https://raw.githubusercontent.com/joshuajohnmills/r/master/MelbourneHousingData.csv")
 ```
 
 ```{r}
